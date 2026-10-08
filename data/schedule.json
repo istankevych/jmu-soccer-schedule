@@ -1,0 +1,52 @@
+{
+  "season": 2026,
+  "team": "James Madison Dukes",
+  "updatedAt": null,
+  "games": [
+    {
+      "date": "2026-08-23",
+      "time": "7:00 PM",
+      "opponent": "Richmond",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "exhibition",
+      "result": { "jmuGoals": 2, "opponentGoals": 1, "overtime": false }
+    },
+    {
+      "date": "2026-08-28",
+      "time": "7:00 PM",
+      "opponent": "Virginia Tech",
+      "homeAway": "away",
+      "location": "Blacksburg, Va.",
+      "competition": "regular",
+      "result": { "jmuGoals": 1, "opponentGoals": 1, "overtime": true }
+    },
+    {
+      "date": "2026-09-12",
+      "time": "6:00 PM",
+      "opponent": "Old Dominion",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "conference",
+      "result": { "jmuGoals": 0, "opponentGoals": 2, "overtime": false }
+    },
+    {
+      "date": "2026-10-17",
+      "time": "7:00 PM",
+      "opponent": "Marshall",
+      "homeAway": "away",
+      "location": "Huntington, W.Va.",
+      "competition": "conference",
+      "result": null
+    },
+    {
+      "date": "2026-11-14",
+      "time": null,
+      "opponent": "TBD",
+      "homeAway": "neutral",
+      "location": null,
+      "competition": "postseason",
+      "result": null
+    }
+  ]
+}
