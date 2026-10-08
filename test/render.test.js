@@ -126,7 +126,7 @@ describe('renderPage', () => {
       { now: NOW }
     );
     expect(html).toContain('Conference game');
-    expect(html).toMatch(/Aug 22\*<\/td>\s*\n\s*<td>vs ODU<\/td>/);
+    expect(html).toMatch(/Aug 22\*<\/td>\s*\n\s*<td data-label="Opponent">vs ODU<\/td>/);
   });
 
   it('shows last updated when updatedAt is set', () => {
