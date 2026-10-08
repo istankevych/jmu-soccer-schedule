@@ -84,9 +84,14 @@ h1 {
     margin-bottom: 0.75rem;
     background: #fff;
     border: 1px solid var(--gold);
-    border-left-width: 4px;
+    border-left: 4px solid var(--gold);
     border-radius: 4px;
   }
+
+  .schedule tr.game--win { border-left-color: var(--win); }
+  .schedule tr.game--loss { border-left-color: var(--loss); }
+  .schedule tr.game--tie { border-left-color: var(--tie); }
+  .schedule tr.game--upcoming { border-left-color: var(--gold); }
 
   .schedule tbody tr:nth-child(even) { background: var(--row-alt); }
 
