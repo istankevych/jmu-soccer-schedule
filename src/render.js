@@ -38,8 +38,12 @@ function opponentLabel(game) {
   return `vs ${name}`;
 }
 
+function easternCalendarDate(now) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(now);
+}
+
 export function findNextGame(games, now) {
-  const today = now.toISOString().slice(0, 10);
+  const today = easternCalendarDate(now);
   return games.find((g) => !g.result && g.date >= today) ?? null;
 }
 
