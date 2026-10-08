@@ -1,22 +1,18 @@
-import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { build } from '../src/build.js';
 
-const distDir = new URL('../dist/', import.meta.url);
+const root = new URL('../', import.meta.url);
+const at = (p) => fileURLToPath(new URL(p, root));
 
-const html = `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>JMU Men's Soccer Schedule</title>
-</head>
-<body>
-  <h1>JMU Men's Soccer Schedule</h1>
-  <p>Coming soon.</p>
-</body>
-</html>
-`;
-
-await mkdir(distDir, { recursive: true });
-await writeFile(new URL('index.html', distDir), html);
-console.log(`Wrote ${fileURLToPath(new URL('index.html', distDir))}`);
+try {
+  const { indexPath } = await build({
+    dataPath: at('data/schedule.json'),
+    publicDir: at('public/'),
+    outDir: at('dist/'),
+    now: new Date(),
+  });
+  console.log(`Wrote ${indexPath}`);
+} catch (err) {
+  console.error(`Build failed: ${err.message}`);
+  process.exit(1);
+}
