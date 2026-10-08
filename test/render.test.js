@@ -43,9 +43,16 @@ describe('renderPage', () => {
     expect(html).toMatch(/^<!DOCTYPE html>/i);
     expect(html).toContain('<title>JMU Men&#39;s Soccer — 2026 Schedule</title>');
     expect(html).toContain('<h1>JMU Men&#39;s Soccer — 2026 Schedule</h1>');
-    expect(html).toContain('<link rel="stylesheet" href="/styles.css">');
+    expect(html).toContain('<link rel="stylesheet" href="styles.css">');
     expect(html).toContain('vs A');
     expect(html).toContain('at B');
+  });
+
+  it('links the stylesheet with a relative path so the site works under /<repo>/', () => {
+    const html = renderPage(sched([game()]), { now: NOW });
+    const hrefs = [...html.matchAll(/<link rel="stylesheet" href="([^"]*)">/g)].map((m) => m[1]);
+    expect(hrefs).toEqual(['styles.css']);
+    expect(html).not.toMatch(/(href|src)="\//);
   });
 
   it('escapes opponent names in the table', () => {
