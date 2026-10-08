@@ -111,7 +111,7 @@ export function renderPage(schedule, { now: _now } = {}) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${escapeHtml(title)}</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <h1>${escapeHtml(title)}</h1>
