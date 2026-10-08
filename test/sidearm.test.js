@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { parseSidearmSchedule, parseGameDate, normalizeTime, parseResult } from '../src/sources/sidearm.js';
+import * as cheerio from 'cheerio';
+import {
+  parseSidearmSchedule,
+  parseGameDate,
+  normalizeTime,
+  parseResult,
+  parseNuxtHomeAwayList
+} from '../src/sources/sidearm.js';
 import { validateSchedule } from '../src/schedule.js';
 
 const fixture = (name) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8');
@@ -49,6 +56,28 @@ describe('parseSidearmSchedule on the real jmusports.com page (nextgen markup)',
     expect(upcoming).toHaveLength(9);
     expect(upcoming.every((g) => g.result === null)).toBe(true);
     expect(byOpponent('Georgia State')).toMatchObject({ date: '2026-10-10', time: '7:00 PM', homeAway: 'home' });
+  });
+
+  it('embeds Sidearm Nuxt payload with neutral location indicators', () => {
+    const html = fixture('jmu-schedule-2026.html');
+    expect(html).toMatch(/id="__NUXT_DATA__"/);
+    expect(parseNuxtHomeAwayList(html)).toEqual([
+      'home', 'home', 'away', 'away', 'away', 'home', 'home', 'home', 'away', 'home',
+      'home', 'home', 'away', 'away', 'home', 'away', 'home', 'neutral', 'neutral', 'neutral'
+    ]);
+  });
+
+  it('uses Nuxt location_indicator when the visible stamp shows vs for a neutral game', () => {
+    const $ = cheerio.load(fixture('jmu-schedule-2026.html'));
+    $('[data-test-id="s-game-card-standard__root"]').each((_, el) => {
+      const card = $(el);
+      const opp = card.find('[data-test-id^="s-game-card-standard__header-team-opponent"]').first().text().trim();
+      if (opp === 'Semifinals') card.find('[data-test-id="s-stamp__root"]').first().text('vs');
+    });
+    const warnings = [];
+    const parsed = parseSidearmSchedule($.html(), { season: 2026, warnings });
+    expect(parsed.find((g) => g.opponent === 'Semifinals')).toMatchObject({ homeAway: 'neutral' });
+    expect(warnings).toEqual([]);
   });
 
   it('maps conference tournament placeholders to postseason with TBD fields as null', () => {
