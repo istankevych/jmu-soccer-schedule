@@ -1,0 +1,16 @@
+{
+  "season": 2026,
+  "team": "James Madison Dukes",
+  "updatedAt": null,
+  "games": [
+    {
+      "date": "2026-08-23",
+      "time": "7:00 PM",
+      "opponent": "Richmond",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "exhibition",
+      "result": { "jmuGoals": 2, "opponentGoals": 1, "overtime": false }
+    }
+  ]
+}
