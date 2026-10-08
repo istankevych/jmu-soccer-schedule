@@ -74,13 +74,15 @@ describe('parseSidearmSchedule on the real jmusports.com page (nextgen markup)',
     const m = /(<script[^>]*id="__NUXT_DATA__"[^>]*>)([\s\S]*?)(<\/script>)/.exec(html);
     const data = JSON.parse(m[2]);
     const entry = data.find((e) => e && typeof e === 'object' && !Array.isArray(e) && 'location_indicator' in e);
-    data[entry.location_indicator] = 'N';
+    // devalue shares one 'H' slot across all home games, so repoint only this entry to a new 'N' value.
+    entry.location_indicator = data.push('N') - 1;
     const patched = html.replace(m[0], () => m[1] + JSON.stringify(data) + m[3]);
     const $ = cheerio.load(patched);
     expect($('[data-test-id="s-stamp__root"]').first().text().trim().toLowerCase()).toMatch(/^vs\.?$/);
     const warnings = [];
     const parsed = parseSidearmSchedule(patched, { season: 2026, warnings });
     expect(parsed[0]).toMatchObject({ opponent: 'Rider', homeAway: 'neutral' });
+    expect(parsed.find((g) => g.opponent === 'Gardner-Webb')).toMatchObject({ homeAway: 'home' });
     expect(warnings).toEqual([]);
   });
 
