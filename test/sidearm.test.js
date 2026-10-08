@@ -61,23 +61,35 @@ describe('parseSidearmSchedule on the real jmusports.com page (nextgen markup)',
   it('embeds Sidearm Nuxt payload with neutral location indicators', () => {
     const html = fixture('jmu-schedule-2026.html');
     expect(html).toMatch(/id="__NUXT_DATA__"/);
-    expect(parseNuxtHomeAwayList(html)).toEqual([
-      'home', 'home', 'away', 'away', 'away', 'home', 'home', 'home', 'away', 'home',
-      'home', 'home', 'away', 'away', 'home', 'away', 'home', 'neutral', 'neutral', 'neutral'
-    ]);
+    const byDate = parseNuxtHomeAwayList(html);
+    expect(byDate.size).toBe(20);
+    expect(byDate.get('2026-08-20')).toBe('home');
+    expect(byDate.get('2026-09-04')).toBe('away');
+    expect([...byDate.values()].filter((v) => v === 'neutral')).toHaveLength(3);
   });
 
-  it('uses Nuxt location_indicator when the visible stamp shows vs for a neutral game', () => {
-    const $ = cheerio.load(fixture('jmu-schedule-2026.html'));
-    $('[data-test-id="s-game-card-standard__root"]').each((_, el) => {
-      const card = $(el);
-      const opp = card.find('[data-test-id^="s-game-card-standard__header-team-opponent"]').first().text().trim();
-      if (opp === 'Semifinals') card.find('[data-test-id="s-stamp__root"]').first().text('vs');
-    });
+  it('uses Nuxt location_indicator when the visible stamp shows vs', () => {
+    // Rewrite the payload so a regular-season home game (Rider, Aug 20) is neutral.
+    const html = fixture('jmu-schedule-2026.html');
+    const m = /(<script[^>]*id="__NUXT_DATA__"[^>]*>)([\s\S]*?)(<\/script>)/.exec(html);
+    const data = JSON.parse(m[2]);
+    const entry = data.find((e) => e && typeof e === 'object' && !Array.isArray(e) && 'location_indicator' in e);
+    data[entry.location_indicator] = 'N';
+    const patched = html.replace(m[0], () => m[1] + JSON.stringify(data) + m[3]);
+    const $ = cheerio.load(patched);
+    expect($('[data-test-id="s-stamp__root"]').first().text().trim().toLowerCase()).toMatch(/^vs\.?$/);
     const warnings = [];
-    const parsed = parseSidearmSchedule($.html(), { season: 2026, warnings });
-    expect(parsed.find((g) => g.opponent === 'Semifinals')).toMatchObject({ homeAway: 'neutral' });
+    const parsed = parseSidearmSchedule(patched, { season: 2026, warnings });
+    expect(parsed[0]).toMatchObject({ opponent: 'Rider', homeAway: 'neutral' });
     expect(warnings).toEqual([]);
+  });
+
+  it('falls back to the visible stamp with a warning when the payload does not match the cards', () => {
+    const html = fixture('jmu-schedule-2026.html').replace(/2026-08-20T18:00:00/g, '2026-08-21T18:00:00');
+    const warnings = [];
+    const parsed = parseSidearmSchedule(html, { season: 2026, warnings });
+    expect(parsed[0]).toMatchObject({ opponent: 'Rider', homeAway: 'home' });
+    expect(warnings).toEqual(['2026-08-20: no matching Nuxt location_indicator, using the visible stamp']);
   });
 
   it('maps conference tournament placeholders to postseason with TBD fields as null', () => {
