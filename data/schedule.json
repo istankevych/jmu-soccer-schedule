@@ -1,37 +1,171 @@
 {
   "season": 2026,
   "team": "James Madison Dukes",
-  "updatedAt": null,
+  "updatedAt": "2026-10-08T22:29:33.634Z",
   "games": [
     {
-      "date": "2026-08-23",
-      "time": "7:00 PM",
-      "opponent": "Richmond",
+      "date": "2026-08-20",
+      "time": "6:00 PM",
+      "opponent": "Rider",
       "homeAway": "home",
       "location": "Harrisonburg, Va.",
-      "competition": "exhibition",
-      "result": { "jmuGoals": 2, "opponentGoals": 1, "overtime": false }
-    },
-    {
-      "date": "2026-08-28",
-      "time": "7:00 PM",
-      "opponent": "Virginia Tech",
-      "homeAway": "away",
-      "location": "Blacksburg, Va.",
       "competition": "regular",
-      "result": { "jmuGoals": 1, "opponentGoals": 1, "overtime": true }
+      "result": {
+        "jmuGoals": 0,
+        "opponentGoals": 1,
+        "overtime": false
+      }
     },
     {
-      "date": "2026-09-12",
-      "time": "6:00 PM",
-      "opponent": "Old Dominion",
+      "date": "2026-08-24",
+      "time": "7:00 PM",
+      "opponent": "Gardner-Webb",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "regular",
+      "result": {
+        "jmuGoals": 2,
+        "opponentGoals": 0,
+        "overtime": false
+      }
+    },
+    {
+      "date": "2026-08-29",
+      "time": "7:00 PM",
+      "opponent": "Radford",
+      "homeAway": "away",
+      "location": "Radford, Va.",
+      "competition": "regular",
+      "result": {
+        "jmuGoals": 1,
+        "opponentGoals": 2,
+        "overtime": false
+      }
+    },
+    {
+      "date": "2026-09-04",
+      "time": "7:00 PM",
+      "opponent": "Princeton",
+      "homeAway": "away",
+      "location": "Princeton, N.J.",
+      "competition": "regular",
+      "result": {
+        "jmuGoals": 0,
+        "opponentGoals": 2,
+        "overtime": false
+      }
+    },
+    {
+      "date": "2026-09-07",
+      "time": "1:00 PM",
+      "opponent": "NJIT",
+      "homeAway": "away",
+      "location": "Newark, N.J.",
+      "competition": "regular",
+      "result": {
+        "jmuGoals": 0,
+        "opponentGoals": 2,
+        "overtime": false
+      }
+    },
+    {
+      "date": "2026-09-11",
+      "time": "7:00 PM",
+      "opponent": "Longwood",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "regular",
+      "result": {
+        "jmuGoals": 2,
+        "opponentGoals": 0,
+        "overtime": false
+      }
+    },
+    {
+      "date": "2026-09-18",
+      "time": "7:00 PM",
+      "opponent": "UCF",
       "homeAway": "home",
       "location": "Harrisonburg, Va.",
       "competition": "conference",
-      "result": { "jmuGoals": 0, "opponentGoals": 2, "overtime": false }
+      "result": {
+        "jmuGoals": 1,
+        "opponentGoals": 0,
+        "overtime": false
+      }
+    },
+    {
+      "date": "2026-09-22",
+      "time": "7:00 PM",
+      "opponent": "Liberty",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "regular",
+      "result": {
+        "jmuGoals": 2,
+        "opponentGoals": 2,
+        "overtime": false
+      }
+    },
+    {
+      "date": "2026-09-27",
+      "time": "7:00 PM",
+      "opponent": "South Carolina",
+      "homeAway": "away",
+      "location": "Columbia, S.C.",
+      "competition": "conference",
+      "result": {
+        "jmuGoals": 1,
+        "opponentGoals": 1,
+        "overtime": false
+      }
+    },
+    {
+      "date": "2026-10-02",
+      "time": "7:00 PM",
+      "opponent": "Coastal Carolina",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "conference",
+      "result": {
+        "jmuGoals": 1,
+        "opponentGoals": 0,
+        "overtime": false
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "time": "7:00 PM",
+      "opponent": "Mary Baldwin",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "regular",
+      "result": {
+        "jmuGoals": 6,
+        "opponentGoals": 0,
+        "overtime": false
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "time": "7:00 PM",
+      "opponent": "Georgia State",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "conference",
+      "result": null
     },
     {
       "date": "2026-10-17",
+      "time": "7:00 PM",
+      "opponent": "Georgia Southern",
+      "homeAway": "away",
+      "location": "Statesboro, Ga.",
+      "competition": "conference",
+      "result": null
+    },
+    {
+      "date": "2026-10-21",
       "time": "7:00 PM",
       "opponent": "Marshall",
       "homeAway": "away",
@@ -40,9 +174,54 @@
       "result": null
     },
     {
-      "date": "2026-11-14",
+      "date": "2026-10-25",
+      "time": "6:00 PM",
+      "opponent": "Kentucky",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "conference",
+      "result": null
+    },
+    {
+      "date": "2026-10-30",
+      "time": "7:00 PM",
+      "opponent": "Old Dominion",
+      "homeAway": "away",
+      "location": "Norfolk, Va.",
+      "competition": "conference",
+      "result": null
+    },
+    {
+      "date": "2026-11-03",
+      "time": "7:00 PM",
+      "opponent": "West Virginia",
+      "homeAway": "home",
+      "location": "Harrisonburg, Va.",
+      "competition": "conference",
+      "result": null
+    },
+    {
+      "date": "2026-11-08",
       "time": null,
-      "opponent": "TBD",
+      "opponent": "Quarterfinals",
+      "homeAway": "neutral",
+      "location": null,
+      "competition": "postseason",
+      "result": null
+    },
+    {
+      "date": "2026-11-11",
+      "time": "7:00 PM",
+      "opponent": "Semifinals",
+      "homeAway": "neutral",
+      "location": null,
+      "competition": "postseason",
+      "result": null
+    },
+    {
+      "date": "2026-11-15",
+      "time": "1:00 PM",
+      "opponent": "Finals",
       "homeAway": "neutral",
       "location": null,
       "competition": "postseason",
