@@ -97,15 +97,66 @@ function homeAwayFromStamp(text) {
   return 'neutral';
 }
 
-function extractNextgen($, el) {
+function homeAwayFromLocationIndicator(indicator) {
+  const t = clean(indicator).toUpperCase();
+  if (t === 'H') return 'home';
+  if (t === 'A') return 'away';
+  if (t === 'N') return 'neutral';
+  return null;
+}
+
+const NUXT_DATA_RE = /<script[^>]*\bid="__NUXT_DATA__"[^>]*>([\s\S]*?)<\/script>/i;
+
+/**
+ * Home/away/neutral per game date (YYYY-MM-DD) from Sidearm's Nuxt payload, or null when absent.
+ * Dates that occur more than once with different values are left out as ambiguous.
+ */
+export function parseNuxtHomeAwayList(html) {
+  const m = NUXT_DATA_RE.exec(html);
+  if (!m) return null;
+  let data;
+  try {
+    data = JSON.parse(m[1]);
+  } catch {
+    return null;
+  }
+  if (!Array.isArray(data)) return null;
+
+  const resolve = (idx) => {
+    return data[idx];
+  };
+
+  const byDate = new Map();
+  for (const entry of data) {
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) continue;
+    if (!('location_indicator' in entry) || !('date' in entry)) continue;
+    const homeAway = homeAwayFromLocationIndicator(resolve(entry.location_indicator));
+    const date = /^\d{4}-\d{2}-\d{2}/.exec(resolve(entry.date))?.[0];
+    if (!homeAway || !date) continue;
+    byDate.set(date, byDate.has(date) && byDate.get(date) !== homeAway ? null : homeAway);
+  }
+  for (const [date, homeAway] of byDate) if (homeAway === null) byDate.delete(date);
+  return byDate.size > 0 ? byDate : null;
+}
+
+function extractNextgen($, el, season, nuxtHomeAway, warnings) {
   const card = $(el);
   const dateEl = card.find(`${TID('s-game-card-standard__header-game-date-details')}, ${TID('s-game-card-standard__header-game-date')}`);
   const facility = card.find('[data-test-id^="s-game-card-facility-and-location__"][data-test-id*="facility-title"]');
+  const stampHomeAway = homeAwayFromStamp(card.find(TID('s-stamp__root')).first().text());
+  const dateText = dateEl.first().text();
+  let homeAway = stampHomeAway;
+  if (nuxtHomeAway) {
+    const date = parseGameDate(dateText, season);
+    const fromPayload = date && nuxtHomeAway.get(date);
+    if (fromPayload) homeAway = fromPayload;
+    else warnings.push(`${date ?? clean(dateText)}: no matching Nuxt location_indicator, using the visible stamp`);
+  }
   return {
-    dateText: dateEl.first().text(),
+    dateText,
     timeText: card.find(`${TID('s-game-card-standard__header-game-time')} [aria-label="Event Time"]`).first().text(),
     opponentText: card.find('[data-test-id^="s-game-card-standard__header-team-opponent"]').first().text(),
-    homeAway: homeAwayFromStamp(card.find(TID('s-stamp__root')).first().text()),
+    homeAway,
     location: orNull(card.find(TID('s-game-card-facility-and-location__standard-location-details')).first().text()) ??
       orNull(facility.first().text()),
     resultText: card.find(TID('s-game-card-standard__header-game-team-score')).first().text(),
@@ -169,11 +220,13 @@ function toGame(raw, season) {
 export function parseSidearmSchedule(html, { season, warnings = [] } = {}) {
   if (!Number.isInteger(season)) throw new TypeError('parseSidearmSchedule: season must be an integer');
   const $ = cheerio.load(html);
+  const nuxtHomeAway = parseNuxtHomeAwayList(html);
   const games = [];
   $(`${LEGACY_SELECTOR}, ${NEXTGEN_SELECTOR}`).each((i, el) => {
     const label = `game #${i + 1}`;
     try {
-      const raw = $(el).is(LEGACY_SELECTOR) ? extractLegacy($, el) : extractNextgen($, el);
+      const isLegacy = $(el).is(LEGACY_SELECTOR);
+      const raw = isLegacy ? extractLegacy($, el) : extractNextgen($, el, season, nuxtHomeAway, warnings);
       const { game, warning } = toGame(raw, season);
       if (warning) warnings.push(`${label} (${game.opponent}, ${game.date}): ${warning}; result set to null`);
       games.push(game);
