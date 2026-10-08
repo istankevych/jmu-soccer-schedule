@@ -181,6 +181,12 @@ describe('renderPage', () => {
       expect(html).toMatch(/Fri, Sep 18 · at Soon/);
     });
 
+    it('keeps an evening game as next after UTC midnight', () => {
+      // 2026-09-19T01:00Z is still Sep 18, 9 PM in New York
+      const html = renderPage(sched(games()), { now: new Date('2026-09-19T01:00:00Z') });
+      expect(html).toMatch(/Fri, Sep 18 · at Soon/);
+    });
+
     it('shows season complete with the final record after the last game', () => {
       const html = renderPage(sched(games().slice(0, 1)), { now: NOW });
       expect(html).toContain('Season complete');

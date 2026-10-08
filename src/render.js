@@ -39,7 +39,8 @@ function opponentLabel(game) {
 }
 
 export function findNextGame(games, now) {
-  const today = now.toISOString().slice(0, 10);
+  // en-CA formats as YYYY-MM-DD; use the Eastern date so evening games stay "today".
+  const today = now.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
   return games.find((g) => !g.result && g.date >= today) ?? null;
 }
 
