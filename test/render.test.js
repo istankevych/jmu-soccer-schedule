@@ -183,7 +183,8 @@ describe('renderPage', () => {
 
     it('uses US Eastern calendar date so late-evening games are not skipped', () => {
       const list = games();
-      const now = new Date('2026-09-19T02:00:00Z');
+      // 2026-09-19T01:00Z is still Sep 18, 9 PM in New York
+      const now = new Date('2026-09-19T01:00:00Z');
       expect(findNextGame(list, now)?.date).toBe('2026-09-18');
       const html = renderPage(sched(list), { now });
       expect(html).toMatch(/Fri, Sep 18 · at Soon/);
