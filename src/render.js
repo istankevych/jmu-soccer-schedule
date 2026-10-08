@@ -29,8 +29,13 @@ function opponentLabel(game) {
   return `vs ${name}`;
 }
 
-function rowClass(game) {
-  if (!game.result) return 'game--upcoming';
+export function findNextGame(games, now) {
+  const today = now.toISOString().slice(0, 10);
+  return games.find((g) => !g.result && g.date >= today) ?? null;
+}
+
+function rowClass(game, nextGame) {
+  if (!game.result) return game === nextGame ? 'game--upcoming game--next' : 'game--upcoming';
   const o = outcome(game.result);
   if (o === 'W') return 'game--win';
   if (o === 'L') return 'game--loss';
@@ -56,10 +61,10 @@ function formatUpdatedAt(iso) {
   });
 }
 
-function renderGameRow(game) {
+function renderGameRow(game, nextGame) {
   const confMark = game.competition === 'conference' ? '*' : '';
   const location = game.location ? escapeHtml(game.location) : '';
-  return `    <tr class="${rowClass(game)}">
+  return `    <tr class="${rowClass(game, nextGame)}">
       <td data-label="Date">${escapeHtml(formatGameDate(game.date))}${confMark}</td>
       <td data-label="Opponent">${opponentLabel(game)}</td>
       <td data-label="Location">${location}</td>
@@ -67,11 +72,11 @@ function renderGameRow(game) {
     </tr>`;
 }
 
-function renderGamesTable(games) {
+function renderGamesTable(games, nextGame) {
   if (games.length === 0) {
     return '  <p class="schedule-empty">No games on the schedule yet.</p>';
   }
-  const rows = games.map(renderGameRow).join('\n');
+  const rows = games.map((g) => renderGameRow(g, nextGame)).join('\n');
   const hasConference = games.some((g) => g.competition === 'conference');
   const legend = hasConference
     ? '\n  <p class="schedule-legend"><span aria-hidden="true">*</span> Conference game</p>'
@@ -91,14 +96,33 @@ ${rows}
   </table>${legend}`;
 }
 
+function renderNextGame(games, nextGame, overall) {
+  if (games.length === 0) return '';
+  if (!nextGame) {
+    return `  <section class="next-game next-game--complete">
+    <h2>Season complete</h2>
+    <p>Final record: ${escapeHtml(formatRecord(overall))}</p>
+  </section>
+`;
+  }
+  const location = nextGame.location ? escapeHtml(nextGame.location) : 'Location TBA';
+  const time = nextGame.time ? escapeHtml(nextGame.time) : 'TBA';
+  return `  <section class="next-game">
+    <h2>Next game</h2>
+    <p>${escapeHtml(formatGameDate(nextGame.date))} · ${opponentLabel(nextGame)} · ${location} · ${time}</p>
+  </section>
+`;
+}
+
 /**
  * @param {{ season: number, team: string, updatedAt: string | null, games: object[] }} schedule
- * @param {{ now: Date }} _options
+ * @param {{ now: Date }} options
  */
-export function renderPage(schedule, { now: _now } = {}) {
+export function renderPage(schedule, { now = new Date() } = {}) {
   const season = schedule.season;
   const title = `JMU Men's Soccer — ${season} Schedule`;
   const overall = seasonRecord(schedule.games);
+  const nextGame = findNextGame(schedule.games, now);
   const conference = seasonRecord(schedule.games, { competition: 'conference' });
   const updated =
     schedule.updatedAt != null
@@ -116,7 +140,7 @@ export function renderPage(schedule, { now: _now } = {}) {
 <body>
   <h1>${escapeHtml(title)}</h1>
   <p class="record">Overall: ${escapeHtml(formatRecord(overall))} · Conference: ${escapeHtml(formatRecord(conference))}</p>
-${renderGamesTable(schedule.games)}
+${renderNextGame(schedule.games, nextGame, overall)}${renderGamesTable(schedule.games, nextGame)}
 ${updated}
 </body>
 </html>

@@ -59,6 +59,11 @@ h1 {
 .game--tie { border-left: 4px solid var(--tie); }
 .game--tie td:last-child { color: var(--tie); font-weight: 600; }
 .game--upcoming { border-left: 4px solid transparent; color: var(--muted); }
+.game--next { background: var(--row-alt); color: inherit; font-weight: 600; }
+
+.next-game { border-left: 4px solid var(--gold); background: var(--row-alt); padding: 0.5rem 1rem; margin: 1rem 0; }
+.next-game h2 { margin: 0 0 0.25rem; font-size: 1rem; }
+.next-game p { margin: 0; }
 
 .schedule-legend,
 .last-updated,
@@ -92,6 +97,7 @@ h1 {
   .schedule tr.game--loss { border-left-color: var(--loss); }
   .schedule tr.game--tie { border-left-color: var(--tie); }
   .schedule tr.game--upcoming { border-left-color: var(--gold); }
+  .schedule tr.game--next { background: var(--row-alt); }
 
   .schedule tbody tr:nth-child(even) { background: var(--row-alt); }
 

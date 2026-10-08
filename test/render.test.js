@@ -147,4 +147,43 @@ describe('renderPage', () => {
     expect(html).toContain('No games on the schedule yet.');
     expect(html).not.toContain('<table');
   });
+
+  describe('next game', () => {
+    const games = () => [
+      game({ date: '2026-08-22', opponent: 'Past', result: { jmuGoals: 1, opponentGoals: 0, overtime: false } }),
+      game({ date: '2026-09-18', opponent: 'Soon', homeAway: 'away', location: 'Norfolk, Va.', time: '5:00 PM' }),
+      game({ date: '2026-10-01', opponent: 'Later' })
+    ];
+
+    it('shows the first unplayed game on or after now', () => {
+      const html = renderPage(sched(games()), { now: NOW });
+      expect(html).toContain('Next game');
+      expect(html).toMatch(/Fri, Sep 18 · at Soon · Norfolk, Va\. · 5:00 PM/);
+      expect(html.match(/game--next/g).length).toBe(1);
+      expect(html).toMatch(/class="game--upcoming game--next">\s*<td[^>]*>Fri, Sep 18/);
+    });
+
+    it('advances when now moves forward', () => {
+      const html = renderPage(sched(games()), { now: new Date('2026-09-19T12:00:00Z') });
+      expect(html).toMatch(/Thu, Oct 1 · vs Later/);
+      expect(html).toMatch(/class="game--upcoming game--next">\s*<td[^>]*>Thu, Oct 1/);
+    });
+
+    it('includes a game happening today', () => {
+      const html = renderPage(sched(games()), { now: new Date('2026-09-18T23:00:00Z') });
+      expect(html).toMatch(/Fri, Sep 18 · at Soon/);
+    });
+
+    it('shows season complete with the final record after the last game', () => {
+      const html = renderPage(sched(games().slice(0, 1)), { now: NOW });
+      expect(html).toContain('Season complete');
+      expect(html).toContain('Final record: 1-0-0');
+      expect(html).not.toContain('game--next');
+    });
+
+    it('omits the banner when there are no games', () => {
+      const html = renderPage(sched([]), { now: NOW });
+      expect(html).not.toContain('next-game');
+    });
+  });
 });
