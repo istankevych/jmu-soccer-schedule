@@ -43,9 +43,16 @@ describe('renderPage', () => {
     expect(html).toMatch(/^<!DOCTYPE html>/i);
     expect(html).toContain('<title>JMU Men&#39;s Soccer — 2026 Schedule</title>');
     expect(html).toContain('<h1>JMU Men&#39;s Soccer — 2026 Schedule</h1>');
-    expect(html).toContain('<link rel="stylesheet" href="/styles.css">');
+    expect(html).toContain('<link rel="stylesheet" href="styles.css">');
     expect(html).toContain('vs A');
     expect(html).toContain('at B');
+  });
+
+  it('links the stylesheet with a relative path so the site works under /<repo>/', () => {
+    const html = renderPage(sched([game()]), { now: NOW });
+    const hrefs = [...html.matchAll(/<link rel="stylesheet" href="([^"]*)">/g)].map((m) => m[1]);
+    expect(hrefs).toEqual(['styles.css']);
+    expect(html).not.toMatch(/(href|src)="\//);
   });
 
   it('escapes opponent names in the table', () => {
@@ -146,5 +153,23 @@ describe('renderPage', () => {
     const html = renderPage(sched([]), { now: NOW });
     expect(html).toContain('No games on the schedule yet.');
     expect(html).not.toContain('<table');
+  });
+});
+
+describe('postseason placeholder opponents', () => {
+  it('renders round names as TBD with a round label', () => {
+    for (const round of ['Quarterfinals', 'Semifinals', 'Finals']) {
+      const html = renderPage(
+        sched([game({ opponent: round, homeAway: 'neutral', location: 'TBD', time: null })]),
+        { now: NOW }
+      );
+      expect(html).toContain(`TBD <span class="round-label">(${round})</span>`);
+      expect(html).not.toContain(`vs ${round}`);
+    }
+  });
+
+  it('still renders real opponents normally', () => {
+    const html = renderPage(sched([game({ opponent: 'Marshall', homeAway: 'neutral' })]), { now: NOW });
+    expect(html).toContain('vs Marshall (N)');
   });
 });

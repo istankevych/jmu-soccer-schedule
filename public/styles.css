@@ -59,6 +59,7 @@ h1 {
 .game--tie { border-left: 4px solid var(--tie); }
 .game--tie td:last-child { color: var(--tie); font-weight: 600; }
 .game--upcoming { border-left: 4px solid transparent; color: var(--muted); }
+.round-label { color: var(--muted); font-size: 0.875em; font-weight: 400; }
 
 .schedule-legend,
 .last-updated,

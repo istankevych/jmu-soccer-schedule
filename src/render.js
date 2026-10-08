@@ -22,7 +22,16 @@ function formatRecord({ wins, losses, ties }) {
   return `${wins}-${losses}-${ties}`;
 }
 
+const PLACEHOLDER_ROUNDS = ['quarterfinals', 'semifinals', 'finals'];
+
+function isPlaceholderOpponent(game) {
+  return PLACEHOLDER_ROUNDS.includes(String(game.opponent).trim().toLowerCase());
+}
+
 function opponentLabel(game) {
+  if (isPlaceholderOpponent(game)) {
+    return `TBD <span class="round-label">(${escapeHtml(String(game.opponent).trim())})</span>`;
+  }
   const name = escapeHtml(game.opponent);
   if (game.homeAway === 'away') return `at ${name}`;
   if (game.homeAway === 'neutral') return `vs ${name} (N)`;
@@ -111,7 +120,7 @@ export function renderPage(schedule, { now: _now } = {}) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${escapeHtml(title)}</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <h1>${escapeHtml(title)}</h1>

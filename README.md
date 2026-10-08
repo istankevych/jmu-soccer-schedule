@@ -13,7 +13,7 @@ You can also edit `data/schedule.json` by hand (e.g. to fix a score) and rebuild
 
 ## Stack
 
-- Node.js 20+ (plain JavaScript, ES modules)
+- Node.js ^20.19.0 or >=22.12.0 (plain JavaScript, ES modules)
 - cheerio (HTML parsing for the data fetcher)
 - Vitest (tests)
 
@@ -38,3 +38,17 @@ public/          static assets copied into dist/ (CSS)
 test/            Vitest tests and fixtures
 dist/            build output (git-ignored)
 ```
+
+## Deployment
+
+The site is hosted on GitHub Pages and deployed by `.github/workflows/deploy.yml`. The workflow runs:
+
+- on every push to `main`,
+- on manual dispatch (Actions → Deploy → Run workflow),
+- daily at 10:00 UTC, so scores are refreshed after games.
+
+Each run does `npm ci`, `npm run fetch`, `npm run build`, and publishes `dist/` with the official `actions/upload-pages-artifact` and `actions/deploy-pages` actions. If the fetch step fails (e.g. jmusports.com is down or its markup changed), the run continues and the site is built from the committed `data/schedule.json`. Fetched data is only used for the deployment and is not committed back.
+
+One-time setup: in the repository settings, open Pages and set **Source** to **GitHub Actions**.
+
+All asset paths in the generated HTML are relative (e.g. `styles.css`), so the site works under the project URL `https://<user>.github.io/<repo>/`.

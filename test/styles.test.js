@@ -40,6 +40,11 @@ describe('public/styles.css', () => {
     }
   });
 
+  it('styles the postseason round label as muted secondary text', () => {
+    const css = readFileSync(path, 'utf8');
+    expect(css).toMatch(/\.round-label\s*\{[^}]*color:\s*var\(--muted\)/);
+  });
+
   it('has no external resources', () => {
     const css = readFileSync(path, 'utf8');
     expect(css).not.toMatch(/https?:\/\/|@import/);
