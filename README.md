@@ -13,7 +13,7 @@ You can also edit `data/schedule.json` by hand (e.g. to fix a score) and rebuild
 
 ## Stack
 
-- Node.js 20+ (plain JavaScript, ES modules)
+- Node.js ^20.19.0 or >=22.12.0 (plain JavaScript, ES modules)
 - cheerio (HTML parsing for the data fetcher)
 - Vitest (tests)
 
