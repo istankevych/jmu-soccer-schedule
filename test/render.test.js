@@ -148,3 +148,21 @@ describe('renderPage', () => {
     expect(html).not.toContain('<table');
   });
 });
+
+describe('postseason placeholder opponents', () => {
+  it('renders round names as TBD with a round label', () => {
+    for (const round of ['Quarterfinals', 'Semifinals', 'Finals']) {
+      const html = renderPage(
+        sched([game({ opponent: round, homeAway: 'neutral', location: 'TBD', time: null })]),
+        { now: NOW }
+      );
+      expect(html).toContain(`TBD <span class="round-label">(${round})</span>`);
+      expect(html).not.toContain(`vs ${round}`);
+    }
+  });
+
+  it('still renders real opponents normally', () => {
+    const html = renderPage(sched([game({ opponent: 'Marshall', homeAway: 'neutral' })]), { now: NOW });
+    expect(html).toContain('vs Marshall (N)');
+  });
+});
