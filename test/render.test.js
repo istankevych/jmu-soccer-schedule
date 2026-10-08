@@ -185,5 +185,37 @@ describe('renderPage', () => {
       const html = renderPage(sched([]), { now: NOW });
       expect(html).not.toContain('next-game');
     });
+
+    it('shows Location TBA and TBA in the banner when missing', () => {
+      const html = renderPage(
+        sched([
+          game({
+            date: '2026-08-22',
+            opponent: 'Past',
+            result: { jmuGoals: 1, opponentGoals: 0, overtime: false }
+          }),
+          game({ date: '2026-09-18', opponent: 'Soon', location: null, time: null })
+        ]),
+        { now: NOW }
+      );
+      expect(html).toMatch(/Fri, Sep 18 · vs Soon · Location TBA · TBA/);
+    });
+
+    it('HTML-escapes opponent and location in the next-game banner', () => {
+      const html = renderPage(
+        sched([
+          game({
+            date: '2026-09-18',
+            opponent: 'Opp & Co <script>',
+            location: 'City "Arena"',
+            time: '7:00 PM'
+          })
+        ]),
+        { now: NOW }
+      );
+      expect(html).toContain('vs Opp &amp; Co &lt;script&gt;');
+      expect(html).toContain('City &quot;Arena&quot;');
+      expect(html).not.toContain('<script>');
+    });
   });
 });
