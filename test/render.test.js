@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { renderPage, escapeHtml } from '../src/render.js';
+import { renderPage, escapeHtml, findNextGame } from '../src/render.js';
 
 const NOW = new Date('2026-09-15T12:00:00Z');
 
@@ -181,9 +181,12 @@ describe('renderPage', () => {
       expect(html).toMatch(/Fri, Sep 18 · at Soon/);
     });
 
-    it('keeps an evening game as next after UTC midnight', () => {
+    it('uses US Eastern calendar date so late-evening games are not skipped', () => {
+      const list = games();
       // 2026-09-19T01:00Z is still Sep 18, 9 PM in New York
-      const html = renderPage(sched(games()), { now: new Date('2026-09-19T01:00:00Z') });
+      const now = new Date('2026-09-19T01:00:00Z');
+      expect(findNextGame(list, now)?.date).toBe('2026-09-18');
+      const html = renderPage(sched(list), { now });
       expect(html).toMatch(/Fri, Sep 18 · at Soon/);
     });
 

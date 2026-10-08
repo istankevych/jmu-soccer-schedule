@@ -38,9 +38,13 @@ function opponentLabel(game) {
   return `vs ${name}`;
 }
 
+function easternCalendarDate(now) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(now);
+}
+
 export function findNextGame(games, now) {
-  // en-CA formats as YYYY-MM-DD; use the Eastern date so evening games stay "today".
-  const today = now.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  // en-CA formats as YYYY-MM-DD; use Eastern date so evening games stay "today".
+  const today = easternCalendarDate(now);
   return games.find((g) => !g.result && g.date >= today) ?? null;
 }
 
