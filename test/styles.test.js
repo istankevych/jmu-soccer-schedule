@@ -8,7 +8,7 @@ describe('public/styles.css', () => {
   it('exists and defines the row state classes', () => {
     expect(existsSync(path)).toBe(true);
     const css = readFileSync(path, 'utf8');
-    for (const cls of ['.game--win', '.game--loss', '.game--tie', '.game--upcoming']) {
+    for (const cls of ['.game--win', '.game--loss', '.game--tie', '.game--upcoming', '.game--next']) {
       expect(css).toContain(cls);
     }
   });
