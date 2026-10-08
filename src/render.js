@@ -60,10 +60,10 @@ function renderGameRow(game) {
   const confMark = game.competition === 'conference' ? '*' : '';
   const location = game.location ? escapeHtml(game.location) : '';
   return `    <tr class="${rowClass(game)}">
-      <td>${escapeHtml(formatGameDate(game.date))}${confMark}</td>
-      <td>${opponentLabel(game)}</td>
-      <td>${location}</td>
-      <td>${timeOrResult(game)}</td>
+      <td data-label="Date">${escapeHtml(formatGameDate(game.date))}${confMark}</td>
+      <td data-label="Opponent">${opponentLabel(game)}</td>
+      <td data-label="Location">${location}</td>
+      <td data-label="Time / Result">${timeOrResult(game)}</td>
     </tr>`;
 }
 
