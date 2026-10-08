@@ -68,6 +68,7 @@ h1 {
 .next-game { border-left: 4px solid var(--gold); background: var(--row-alt); padding: 0.5rem 1rem; margin: 1rem 0; }
 .next-game h2 { margin: 0 0 0.25rem; font-size: 1rem; }
 .next-game p { margin: 0; }
+.round-label { color: var(--muted); font-size: 0.875em; font-weight: 400; }
 
 .schedule-legend,
 .last-updated,

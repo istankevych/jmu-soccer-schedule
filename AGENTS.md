@@ -19,7 +19,7 @@
 
 ## Conventions
 
-- Node.js 20+, ES modules (`import`/`export`), no TypeScript.
+- Node.js ^20.19.0 or >=22.12.0, ES modules (`import`/`export`), no TypeScript.
 - 2-space indentation, single quotes, semicolons.
 - Dates in data are ISO strings (`YYYY-MM-DD`); times are optional strings (e.g. `"7:00 PM"`) or `null` when TBA.
 - Anything that depends on the current date must accept a `now` parameter so tests are deterministic.
